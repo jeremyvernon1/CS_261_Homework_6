@@ -52,11 +52,11 @@ class UndirectedGraph:
         Adds edge to the graph
         """
         # Adds vertices if not already in graph
-        self.add_vertex(u)
-        self.add_vertex(v)
-
-        # Adds edge
         if u is not v:
+            self.add_vertex(u)
+            self.add_vertex(v)
+
+            # Adds edge
             if v not in self.adj_list[u]:
                 self.adj_list[u].append(v)
             if u not in self.adj_list[v]:
@@ -169,6 +169,10 @@ if __name__ == '__main__':
 
     for u, v in ['AB', 'AC', 'BC', 'BD', 'CD', 'CE', 'DE', ('B', 'C')]:
         g.add_edge(u, v)
+    print(g)
+
+    g = UndirectedGraph()
+    g.add_edge('C', 'C')
     print(g)
 
 
