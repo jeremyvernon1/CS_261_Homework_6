@@ -1,7 +1,7 @@
-# Course: 
-# Author: 
-# Assignment: 
-# Description:
+# Course: CS 261
+# Author: Jeremy Vernon
+# Assignment: 6
+# Description: Undirected Graphs
 
 
 class UndirectedGraph:
@@ -44,12 +44,21 @@ class UndirectedGraph:
         """
         Add new vertex to the graph
         """
+        if v not in self.adj_list:
+            self.adj_list[v] = []
         
     def add_edge(self, u: str, v: str) -> None:
         """
         Add edge to the graph
         """
-        
+        # Adds vertices if not already in graph
+        self.add_vertex(u)
+        self.add_vertex(v)
+
+        # Adds edge
+        if u is not v:
+            self.adj_list[u] = [str(v)]
+            self.adj_list[v] = [str(u)]
 
     def remove_edge(self, v: str, u: str) -> None:
         """
@@ -67,7 +76,10 @@ class UndirectedGraph:
         """
         Return list of vertices in the graph (any order)
         """
-       
+        get_vertices_results = []
+        for v in self.adj_list:
+            get_vertices_results.append(v)
+        return get_vertices_results
 
     def get_edges(self) -> []:
         """

@@ -1,7 +1,7 @@
 # Course: CS261 - Data Structures
-# Author:
-# Assignment:
-# Description:
+# Author: Jeremy Vernon
+# Assignment: 6
+# Description: Directed Graphs
 
 class DirectedGraph:
     """
