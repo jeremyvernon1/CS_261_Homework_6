@@ -42,14 +42,14 @@ class UndirectedGraph:
 
     def add_vertex(self, v: str) -> None:
         """
-        Add new vertex to the graph
+        Adds new vertex to the graph
         """
         if v not in self.adj_list:
             self.adj_list[v] = []
-        
+
     def add_edge(self, u: str, v: str) -> None:
         """
-        Add edge to the graph
+        Adds edge to the graph
         """
         # Adds vertices if not already in graph
         self.add_vertex(u)
@@ -57,20 +57,34 @@ class UndirectedGraph:
 
         # Adds edge
         if u is not v:
-            self.adj_list[u] = [str(v)]
-            self.adj_list[v] = [str(u)]
+            if v not in self.adj_list[u]:
+                self.adj_list[u].append(v)
+            if u not in self.adj_list[v]:
+                self.adj_list[v].append(u)
 
     def remove_edge(self, v: str, u: str) -> None:
         """
         Remove edge from the graph
         """
-        
+        if u in self.adj_list and v in self.adj_list:
+
+            if v in self.adj_list[u]:
+                self.adj_list[u].remove(v)
+            if u in self.adj_list[v]:
+                self.adj_list[v].remove(u)
 
     def remove_vertex(self, v: str) -> None:
         """
         Remove vertex and all connected edges
         """
-        
+        # removes key if it exists
+        if v in self.adj_list:
+            del self.adj_list[v]
+
+        # adjusts remaining edges
+        for key in self.adj_list:
+            if v in self.adj_list[key]:
+                self.adj_list[key].remove(v)
 
     def get_vertices(self) -> []:
         """
@@ -85,12 +99,29 @@ class UndirectedGraph:
         """
         Return list of edges in the graph (any order)
         """
-        
+        # TODO: get tuple of two incident vertices
+
+        get_edges_results = []
+        for key in self.adj_list:
+            get_edges_results.append(self.adj_list[key])
+        return get_edges_results
+
 
     def is_valid_path(self, path: []) -> bool:
         """
-        Return true if provided path is valid, False otherwise
+        Returns true if provided path is valid, False otherwise
         """
+        length = len(path)
+        if length > 0:
+            # checks first element
+            if path[0] not in self.adj_list:
+                return False
+            # if more than one element in the given path
+            for index in range(length):
+                # checks if the next key contains a value for the current key
+                if ((index + 1) < length) and (path[index] not in self.adj_list[path[index+1]]):
+                    return False
+        return True
        
 
     def dfs(self, v_start, v_end=None) -> []:
