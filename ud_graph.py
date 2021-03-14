@@ -49,31 +49,36 @@ class UndirectedGraph:
         if v not in self.adj_list:
             self.adj_list[v] = []
 
+
     def add_edge(self, u: str, v: str) -> None:
         """
         Adds edge to the graph
         """
-        # Adds vertices if not already in graph
+        # adds vertices if not already in graph
         if u is not v:
             self.add_vertex(u)
             self.add_vertex(v)
 
-            # Adds edge
+            # adds edge
             if v not in self.adj_list[u]:
                 self.adj_list[u].append(v)
             if u not in self.adj_list[v]:
                 self.adj_list[v].append(u)
 
+
     def remove_edge(self, v: str, u: str) -> None:
         """
         Remove edge from the graph
         """
+        # checks if u and v are in the graph
         if u in self.adj_list and v in self.adj_list:
 
+            # removes reference to the other vertex
             if v in self.adj_list[u]:
                 self.adj_list[u].remove(v)
             if u in self.adj_list[v]:
                 self.adj_list[v].remove(u)
+
 
     def remove_vertex(self, v: str) -> None:
         """
@@ -88,24 +93,31 @@ class UndirectedGraph:
             if v in self.adj_list[key]:
                 self.adj_list[key].remove(v)
 
+
     def get_vertices(self) -> []:
         """
         Return list of vertices in the graph (any order)
         """
+        # builds a list of all vertices
         get_vertices_results = []
-        for v in self.adj_list:
-            get_vertices_results.append(v)
+        for vertex in self.adj_list:
+            get_vertices_results.append(vertex)
         return get_vertices_results
+
 
     def get_edges(self) -> []:
         """
         Return list of edges in the graph (any order)
         """
-        # TODO: get tuple of two incident vertices
-
+        # builds a list of edges
         get_edges_results = []
+        get_edges_seen = []
         for key in self.adj_list:
-            get_edges_results.append(self.adj_list[key])
+            get_edges_seen.append(key)
+            for value in self.adj_list[key]:
+                if value not in get_edges_seen:
+                    # append edges that are not already visited
+                    get_edges_results.append((key, value))
         return get_edges_results
 
 
@@ -124,7 +136,7 @@ class UndirectedGraph:
                 if ((index + 1) < length) and (path[index] not in self.adj_list[path[index+1]]):
                     return False
         return True
-       
+
 
     def dfs(self, v_start, v_end=None) -> []:
         """
@@ -135,6 +147,11 @@ class UndirectedGraph:
         dfs_reachable_vertices = []
         dfs_stack = [v_start]
         dfs_visited = {}
+
+        # checks if v_start is in the graph:
+        dfs_vertices = self.get_vertices()
+        if v_start not in dfs_vertices:
+            dfs_stack.pop()
 
         # loops to add the current node and search for the next edge
         while dfs_stack:
@@ -174,6 +191,11 @@ class UndirectedGraph:
         bfs_queue = deque([v_start])
         bfs_visited = {}
 
+        # checks if v_start is in the graph:
+        dfs_vertices = self.get_vertices()
+        if v_start not in dfs_vertices:
+            bfs_queue.pop()
+
         # loops to add the current edges and then to find the next level
         while bfs_queue:
             bfs_curr = bfs_queue.popleft()
@@ -203,7 +225,16 @@ class UndirectedGraph:
         """
         Return number of connected componets in the graph
         """
+        # initializes
         count = 0
+        count_vertices = self.get_vertices()
+
+        # loops to find groups of connected vertices, increment count, and remove the grouped vertices from the list
+        while count_vertices:
+            count_path = self.dfs(count_vertices[0])
+            count += 1
+            for vertex in count_path:
+                count_vertices.remove(vertex)
 
         return count
 
@@ -211,7 +242,9 @@ class UndirectedGraph:
         """
         Return True if graph contains a cycle, False otherwise
         """
-       
+        # for vertex in self.adj_list:
+        #     print("has cycle:", vertex, self.dfs(vertex))
+        return False
 
    
 
@@ -278,6 +311,13 @@ if __name__ == '__main__':
         v1, v2 = test_cases[i], test_cases[-1 - i]
         print(f'{v1}-{v2} DFS:{g.dfs(v1, v2)} BFS:{g.bfs(v1, v2)}')
 
+    print("\nPDF - method dfs() and bfs() example 2")
+    print("--------------------------------------")
+    edges = ['AE', 'AC', 'BE', 'CE', 'CD', 'CB', 'BD', 'ED', 'BH', 'QG', 'FG']
+    g = UndirectedGraph(edges)
+    test_cases = 'J'
+    for case in test_cases:
+        print(f'{case} DFS:{g.dfs(case)} BFS:{g.bfs(case)}')
 
     print("\nPDF - method count_connected_components() example 1")
     print("---------------------------------------------------")
