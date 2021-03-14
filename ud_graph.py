@@ -3,6 +3,8 @@
 # Assignment: 6
 # Description: Undirected Graphs
 
+import heapq
+from collections import deque
 
 class UndirectedGraph:
     """
@@ -129,20 +131,81 @@ class UndirectedGraph:
         Return list of vertices visited during DFS search
         Vertices are picked in alphabetical order
         """
-       
+        # initializes
+        dfs_reachable_vertices = []
+        dfs_stack = [v_start]
+        dfs_visited = {}
+
+        # loops to add the current node and search for the next edge
+        while dfs_stack:
+            # adds node to the path
+            node_curr = dfs_stack.pop()
+            # if node is not already visited, adds to list of visited and to path
+            if node_curr not in dfs_visited:
+                dfs_visited[node_curr] = node_curr
+                dfs_reachable_vertices.append(node_curr)
+                # checks for end node
+                if node_curr == v_end:
+                    return dfs_reachable_vertices
+
+                # Finds smallest value edge, and continues to traverse
+                # creates list of current node's edges
+                dfs_edges = []
+                for value in self.adj_list[node_curr]:
+                    if value not in dfs_visited:
+                        dfs_edges.append(value)
+                # sorts list of edges, then adds to stack in reverse order
+                dfs_edges.sort()
+                while dfs_edges:
+                    edge_curr = dfs_edges.pop()
+                    dfs_stack.append(edge_curr)
+
+        # when stack is empty, return path
+        return dfs_reachable_vertices
+
 
     def bfs(self, v_start, v_end=None) -> []:
         """
         Return list of vertices visited during BFS search
         Vertices are picked in alphabetical order
         """
-        
+        # initializes
+        bfs_reachable_vertices = []
+        bfs_queue = deque([v_start])
+        bfs_visited = {}
+
+        # loops to add the current edges and then to find the next level
+        while bfs_queue:
+            bfs_curr = bfs_queue.popleft()
+
+            # checks if vertex has been visited. If not adds to path and to visited
+            if bfs_curr not in bfs_visited:
+                bfs_reachable_vertices.append(bfs_curr)
+                bfs_visited[bfs_curr] = bfs_curr
+                # checks if reached end node
+                if bfs_curr == v_end:
+                    return bfs_reachable_vertices
+
+                # finds the vertices in the next level
+                bfs_edges = []
+                for value in self.adj_list[bfs_curr]:
+                    if value not in bfs_visited:
+                        bfs_edges.append(value)
+                # sorts list of edges, then adds to queue by smallest
+                heapq.heapify(bfs_edges)
+                while bfs_edges:
+                    lowest_edge = heapq.heappop(bfs_edges)
+                    bfs_queue.append(lowest_edge)
+
+        return bfs_reachable_vertices
 
     def count_connected_components(self):
         """
         Return number of connected componets in the graph
         """
-      
+        count = 0
+
+        return count
 
     def has_cycle(self):
         """
