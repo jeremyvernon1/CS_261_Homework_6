@@ -159,15 +159,88 @@ class DirectedGraph:
 
     def dfs(self, v_start, v_end=None) -> []:
         """
-        TODO: Write this implementation
+        Returns list of vertices visited during DFS search
+        Vertices are picked in ascending order
         """
-        pass
+        # initializes
+        dfs_reachable_vertices = []
+        dfs_stack = [v_start]
+        dfs_visited = {}
+
+        # checks if v_start is in the graph:
+        dfs_vertices = self.get_vertices()
+        if v_start not in dfs_vertices:
+            dfs_stack.pop()
+
+        # loops to add the current node and search for the next edge
+        while dfs_stack:
+            # adds node to the path
+            node_curr = dfs_stack.pop()
+            # if node is not already visited, adds to list of visited and to path
+            if node_curr not in dfs_visited:
+                dfs_visited[node_curr] = node_curr
+                dfs_reachable_vertices.append(node_curr)
+                # checks for end node
+                if node_curr == v_end:
+                    return dfs_reachable_vertices
+
+                # Finds smallest value edge, and continues to traverse
+                # creates list of current node's edges
+                dfs_edges = []
+                dfs_curr_row = self.adj_matrix[node_curr]
+                for index in range(len(dfs_curr_row)):
+                    if dfs_curr_row[index] > 0 and dfs_curr_row[index] not in dfs_visited:
+                        dfs_edges.append(index)
+                # sorts list of edges, then adds to stack in reverse order
+                dfs_edges.sort()
+                while dfs_edges:
+                    edge_curr = dfs_edges.pop()
+                    dfs_stack.append(edge_curr)
+
+        # when stack is empty, return path
+        return dfs_reachable_vertices
+
 
     def bfs(self, v_start, v_end=None) -> []:
         """
-        TODO: Write this implementation
+        Return list of vertices visited during BFS search
+        Vertices are picked in alphabetical order
         """
-        pass
+        # initializes
+        bfs_reachable_vertices = []
+        bfs_queue = deque([v_start])
+        bfs_visited = {}
+
+        # checks if v_start is in the graph:
+        dfs_vertices = self.get_vertices()
+        if v_start not in dfs_vertices:
+            bfs_queue.pop()
+
+        # loops to add the current edges and then to find the next level
+        while bfs_queue:
+            bfs_curr = bfs_queue.popleft()
+
+            # checks if vertex has been visited. If not adds to path and to visited
+            if bfs_curr not in bfs_visited:
+                bfs_reachable_vertices.append(bfs_curr)
+                bfs_visited[bfs_curr] = bfs_curr
+                # checks if reached end node
+                if bfs_curr == v_end:
+                    return bfs_reachable_vertices
+
+                # finds the vertices in the next level
+                bfs_edges = []
+                bfs_curr_row = self.adj_matrix[bfs_curr]
+                for index in range(len(bfs_curr_row)):
+                    if bfs_curr_row[index] > 0 and bfs_curr_row[index] not in bfs_visited:
+                        bfs_edges.append(index)
+                # sorts list of edges, then adds to queue by smallest
+                heapq.heapify(bfs_edges)
+                while bfs_edges:
+                    lowest_edge = heapq.heappop(bfs_edges)
+                    bfs_queue.append(lowest_edge)
+
+        return bfs_reachable_vertices
 
     def has_cycle(self):
         """

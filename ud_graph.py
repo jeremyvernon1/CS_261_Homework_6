@@ -140,8 +140,8 @@ class UndirectedGraph:
 
     def dfs(self, v_start, v_end=None) -> []:
         """
-        Return list of vertices visited during DFS search
-        Vertices are picked in alphabetical order
+        Returns list of vertices visited during DFS search
+        Vertices are picked in ascending order
         """
         # initializes
         dfs_reachable_vertices = []
