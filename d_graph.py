@@ -90,8 +90,8 @@ class DirectedGraph:
         Removes and edge from the graph
         """
         # checks for validity
-        if 0 <= src <= self.v_count and \
-                0 <= dst <= self.v_count and \
+        if 0 <= src < self.v_count and \
+                0 <= dst < self.v_count and \
                 self.adj_matrix[src][dst] > 0:
             # sets edge weight equal to 0
             self.adj_matrix[src][dst] = 0
@@ -100,20 +100,12 @@ class DirectedGraph:
         """
         Returns a list of all vertices
         """
-        # initializes
         get_vertices_results = []
-        get_vert_length = len(self.adj_matrix)
-
-        # searches each cell in the matrix for values greater than 0
-        for row_index in range(get_vert_length):
-            for edge_index in range(get_vert_length):
-                # checks that weight is greater than 0 and vertex not already recorded
-                if self.adj_matrix[row_index][edge_index] > 0 and \
-                        row_index not in get_vertices_results:
-                    # adds vertex to result list
-                    get_vertices_results.append(row_index)
+        for value in range(self.v_count):
+            get_vertices_results.append(value)
 
         return get_vertices_results
+
 
     def get_edges(self) -> []:
         """
@@ -168,8 +160,7 @@ class DirectedGraph:
         dfs_visited = {}
 
         # checks if v_start is in the graph:
-        dfs_vertices = self.get_vertices()
-        if v_start not in dfs_vertices:
+        if v_start < 0 or v_start > self.v_count:
             dfs_stack.pop()
 
         # loops to add the current node and search for the next edge
@@ -212,8 +203,7 @@ class DirectedGraph:
         bfs_visited = {}
 
         # checks if v_start is in the graph:
-        dfs_vertices = self.get_vertices()
-        if v_start not in dfs_vertices:
+        if v_start < 0 or v_start > self.v_count:
             bfs_queue.pop()
 
         # loops to add the current edges and then to find the next level
@@ -292,9 +282,9 @@ if __name__ == '__main__':
     print("\nPDF - method dfs() and bfs() example 1")
     print("--------------------------------------")
     edges = [(0, 1, 10), (4, 0, 12), (1, 4, 15), (4, 3, 3),
-             (3, 1, 5), (2, 1, 23), (3, 2, 7)]
+             (3, 1, 5), (2, 1, 23), (3, 2, 7), [5, 5, 0]]
     g = DirectedGraph(edges)
-    for start in range(5):
+    for start in range(6):
         print(f'{start} DFS:{g.dfs(start)} BFS:{g.bfs(start)}')
 
     print("\nPDF - method has_cycle() example 1")
