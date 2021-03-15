@@ -236,7 +236,44 @@ class DirectedGraph:
         """
         TODO: Write this implementation
         """
-        pass
+        # initializes
+        vertices = self.get_vertices()
+        dfs_reachable_vertices = []
+        dfs_stack = [vertices[0]]
+        dfs_visited = {}
+        node_curr = dfs_stack[-1]
+
+        # loops to add the current node and search for the next edge
+        while dfs_stack:
+            # adds node to the path
+            parent_node = node_curr
+            node_curr = dfs_stack.pop()
+            # if node is not already visited, adds to list of visited and to path
+            if node_curr not in dfs_visited:
+                dfs_visited[node_curr] = node_curr
+                dfs_reachable_vertices.append(node_curr)
+
+                # Finds smallest value edge, and continues to traverse
+                # creates list of current node's edges
+                dfs_edges = []
+                dfs_curr_row = self.adj_matrix[node_curr]
+                # test for completed cycle
+                for index in range(len(dfs_curr_row)):
+                    if dfs_curr_row[index] > 0 and\
+                        index != parent_node and\
+                        index != node_curr and\
+                        index in dfs_visited:
+                        return True
+                    if dfs_curr_row[index] > 0 and index not in dfs_visited:
+                        dfs_edges.append(index)
+                # sorts list of edges, then adds to stack in reverse order
+                dfs_edges.sort()
+                while dfs_edges:
+                    edge_curr = dfs_edges.pop()
+                    dfs_stack.append(edge_curr)
+
+        # when stack is empty, return path
+        return False
 
     def dijkstra(self, src: int) -> []:
         """
