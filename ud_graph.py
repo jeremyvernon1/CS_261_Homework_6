@@ -240,10 +240,43 @@ class UndirectedGraph:
 
     def has_cycle(self):
         """
-        Return True if graph contains a cycle, False otherwise
+        Returns True if graph contains a cycle, False otherwise
         """
-        # for vertex in self.adj_list:
-        #     print("has cycle:", vertex, self.dfs(vertex))
+        # initializes
+        vertices = self.get_vertices()
+        dfs_reachable_vertices = []
+        dfs_stack = [vertices[0]]
+        dfs_visited = {}
+        node_curr = dfs_stack[-1]
+
+        # loops to add the current node and search for the next edge
+        while dfs_stack:
+            # adds node to the path
+            parent_node = node_curr
+            node_curr = dfs_stack.pop()
+            # if node is not already visited, adds to list of visited and to path
+            if node_curr not in dfs_visited:
+                dfs_visited[node_curr] = node_curr
+                dfs_reachable_vertices.append(node_curr)
+
+                # Finds smallest value edge, and continues to traverse
+                # creates list of current node's edges
+                dfs_edges = []
+                for value in self.adj_list[node_curr]:
+                    # checks for cycle
+                    if value != parent_node and\
+                        value != node_curr and\
+                        value in dfs_visited:
+                        return True
+                    if value not in dfs_visited:
+                        dfs_edges.append(value)
+                # sorts list of edges, then adds to stack in reverse order
+                dfs_edges.sort()
+                while dfs_edges:
+                    edge_curr = dfs_edges.pop()
+                    dfs_stack.append(edge_curr)
+
+        # returns false if cycle not found
         return False
 
    

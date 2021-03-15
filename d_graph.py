@@ -234,7 +234,7 @@ class DirectedGraph:
 
     def has_cycle(self):
         """
-        TODO: Write this implementation
+        Returns True if graph contains a cycle, False otherwise
         """
         # initializes
         vertices = self.get_vertices()
@@ -259,6 +259,7 @@ class DirectedGraph:
                 dfs_curr_row = self.adj_matrix[node_curr]
                 # test for completed cycle
                 for index in range(len(dfs_curr_row)):
+                    # checks for cycle
                     if dfs_curr_row[index] > 0 and\
                         index != parent_node and\
                         index != node_curr and\
@@ -272,7 +273,7 @@ class DirectedGraph:
                     edge_curr = dfs_edges.pop()
                     dfs_stack.append(edge_curr)
 
-        # when stack is empty, return path
+        # returns false if cycle not found
         return False
 
     def dijkstra(self, src: int) -> []:
