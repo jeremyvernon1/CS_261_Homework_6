@@ -58,9 +58,12 @@ class DirectedGraph:
         """
         Adds a vertex to the matrix
         """
+        #initializes
         length = self.v_count
+
         # increments size
         self.v_count += 1
+
         # adds 0s to the new row
         self.adj_matrix.append([0] * self.v_count)
         # adds 0s to the previous rows
@@ -74,11 +77,9 @@ class DirectedGraph:
         """
         Adds a weighted edge to the matrix
         """
-        # checks if src and dst fall in range
-        # checks if weight is greater than 0
-        # checks that src and dst are not equal
-        if 0 <= src <= self.v_count and \
-                0 <= dst <= self.v_count and \
+        # checks for validity
+        if 0 <= src < self.v_count and \
+                0 <= dst < self.v_count and \
                 weight > 0 and \
                 src is not dst:
             # add weight to create edge
@@ -88,9 +89,11 @@ class DirectedGraph:
         """
         Removes and edge from the graph
         """
+        # checks for validity
         if 0 <= src <= self.v_count and \
                 0 <= dst <= self.v_count and \
                 self.adj_matrix[src][dst] > 0:
+            # sets edge weight equal to 0
             self.adj_matrix[src][dst] = 0
 
     def get_vertices(self) -> []:
@@ -100,11 +103,12 @@ class DirectedGraph:
         # initializes
         get_vertices_results = []
         get_vert_length = len(self.adj_matrix)
+
         # searches each cell in the matrix for values greater than 0
         for row_index in range(get_vert_length):
             for edge_index in range(get_vert_length):
                 # checks that weight is greater than 0 and vertex not already recorded
-                if self.adj_matrix[row_index][edge_index] > 0 and\
+                if self.adj_matrix[row_index][edge_index] > 0 and \
                         row_index not in get_vertices_results:
                     # adds vertex to result list
                     get_vertices_results.append(row_index)
@@ -118,6 +122,7 @@ class DirectedGraph:
         # initializes
         get_edges_results = []
         get_vert_length = len(self.adj_matrix)
+
         # checks each cell in the matrix for a weight greater than 0
         for row_index in range(get_vert_length):
             for edge_index in range(get_vert_length):
@@ -130,9 +135,27 @@ class DirectedGraph:
 
     def is_valid_path(self, path: []) -> bool:
         """
-        TODO: Write this implementation
+        Returns true if provided path is valid, False otherwise
         """
-        pass
+        # initializes
+        length = len(path)
+
+        # checks if given path is empty
+        if length > 0:
+
+            # checks if first element is a vertex
+            if path[0] < 0 or path[0] > self.v_count:
+                return False
+
+            # if more than one element in the given path
+            if length > 1:
+                for index in range(length - 1):
+                    # checks if there is no weight for the next value in the given path
+                    if self.adj_matrix[path[index]][path[index + 1]] < 1:
+                        return False
+
+        # otherwise returns true
+        return True
 
     def dfs(self, v_start, v_end=None) -> []:
         """
