@@ -180,7 +180,7 @@ class DirectedGraph:
                 dfs_edges = []
                 dfs_curr_row = self.adj_matrix[node_curr]
                 for index in range(len(dfs_curr_row)):
-                    if dfs_curr_row[index] > 0 and dfs_curr_row[index] not in dfs_visited:
+                    if dfs_curr_row[index] > 0 and index not in dfs_visited:
                         dfs_edges.append(index)
                 # sorts list of edges, then adds to stack in reverse order
                 dfs_edges.sort()
@@ -222,7 +222,7 @@ class DirectedGraph:
                 bfs_edges = []
                 bfs_curr_row = self.adj_matrix[bfs_curr]
                 for index in range(len(bfs_curr_row)):
-                    if bfs_curr_row[index] > 0 and bfs_curr_row[index] not in bfs_visited:
+                    if bfs_curr_row[index] > 0 and index not in bfs_visited:
                         bfs_edges.append(index)
                 # sorts list of edges, then adds to queue by smallest
                 heapq.heapify(bfs_edges)
