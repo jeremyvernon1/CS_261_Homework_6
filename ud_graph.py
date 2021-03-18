@@ -244,41 +244,53 @@ class UndirectedGraph:
         """
         # initializes
         vertices = self.get_vertices()
+        v_start = vertices[0]
         dfs_reachable_vertices = []
-        dfs_stack = [vertices[0]]
-        dfs_visited = {}
-        node_curr = dfs_stack[-1]
+        dfs_stack = [v_start]
+        dfs_visited = []
 
         # loops to add the current node and search for the next edge
         while dfs_stack:
             # adds node to the path
-            parent_node = node_curr
             node_curr = dfs_stack.pop()
             # if node is not already visited, adds to list of visited and to path
             if node_curr not in dfs_visited:
-                dfs_visited[node_curr] = node_curr
+                dfs_visited.append(node_curr)
                 dfs_reachable_vertices.append(node_curr)
 
                 # Finds smallest value edge, and continues to traverse
                 # creates list of current node's edges
                 dfs_edges = []
+                dfs_multiples = []
                 for value in self.adj_list[node_curr]:
-                    # checks for cycle
-                    if value != parent_node and\
-                        value != node_curr and\
-                        value in dfs_visited:
-                        return True
-                    if value not in dfs_visited:
-                        dfs_edges.append(value)
-                # sorts list of edges, then adds to stack in reverse order
-                dfs_edges.sort()
-                while dfs_edges:
-                    edge_curr = dfs_edges.pop()
-                    dfs_stack.append(edge_curr)
+                    if value in dfs_visited:
+                        dfs_multiples.append(value)
+                    else:
+                        dfs_stack.append(value)
 
-        # returns false if cycle not found
+                # if node has more than one edge in list of already visited
+                if len(dfs_multiples) > 1:
+                    return True
+            # if disconnected graph
+            if not dfs_stack:
+                if len(dfs_visited) < len(vertices):
+                    for value in vertices:
+                        if value not in dfs_visited:
+                            dfs_stack.append(value)
+
+        # if all vertices visited and cycle not detected, returns False
         return False
 
+
+
+
+        # vertices = self.get_vertices()
+        # for vertex in vertices:
+        #     reachable = self.dfs(vertex)
+        #     # print("has cycle", vertex, self.adj_list[vertex])
+        #     if vertex in self.adj_list[reachable[-1]]:
+        #         return True
+        # return False
    
 
 
